@@ -4,20 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>قصي موبايل | Qusai Mobile</title>
+  <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-  <!-- Firebase SDK -->
-  <script type="importmap">
-    {
-      "imports": {
-        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
-        "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
-      }
-    }
-  </script>
-
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8fafc; transition: background 0.3s, color 0.3s; }
@@ -87,10 +77,10 @@
 </head>
 <body>
 
-<!-- POPUP -->
+<!-- POPUP NOTICE -->
 <div id="popupNotice" class="popup-notice no-print">
   <button class="close-popup" id="closePopupBtn"><i class="fas fa-times"></i></button>
-  <i class="fas fa-truck"></i> ملاحظة: سعر التوصيل يختلف حسب المنطقة لأنه يتم عن طريق شركة شحن خارجية.
+  <i class="fas fa-truck"></i> ملاحظة: السعر لا يشمل التوصيل (التوصيل عن طريق شركة).
 </div>
 
 <!-- NAVBAR -->
@@ -113,10 +103,13 @@
         <button id="authToggleBtn" class="btn-primary text-sm px-4 py-1.5"><i class="fas fa-user-circle ml-1"></i> دخول</button>
       </div>
     </div>
+    <!-- Categories -->
     <div class="cat-tabs no-print">
       <button class="cat-tab active" data-cat="wiwu">WiWU Products</button>
       <button class="cat-tab" data-cat="honor">HONOR</button>
       <button class="cat-tab" data-cat="samsung">SAMSUNG</button>
+      <!-- NEW: Order Product / Check Product -->
+      <button class="cat-tab" id="quickOrderBtn" style="color:#2563eb; border-bottom-color:#2563eb;">طلب منتج / التأكد من المنتج</button>
     </div>
   </div>
 </nav>
@@ -159,7 +152,6 @@
       <h3 class="text-2xl font-bold text-gray-800">تسجيل الدخول</h3>
       <p class="text-sm text-gray-500">أدخل بياناتك للوصول إلى حسابك</p>
     </div>
-    <!-- Google Sign-in (REAL Firebase) -->
     <button id="googleSignInBtn" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl font-medium mb-4 flex items-center justify-center gap-2">
       <i class="fab fa-google"></i> تسجيل الدخول بجوجل
     </button>
@@ -180,7 +172,6 @@
       </form>
       <button id="showLoginBtn" class="mt-2 text-sm text-blue-600">→ العودة لتسجيل الدخول</button>
     </div>
-    <!-- Profile -->
     <div id="profileSection" class="hidden mt-4 border-t pt-4">
       <div class="flex items-center gap-4 mb-3">
         <img id="profileImage" src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=80" class="profile-img">
@@ -216,7 +207,7 @@
   </div>
 </div>
 
-<!-- CHECKOUT MODAL (بدون صورة - مع رسالة تحويل وواتساب) -->
+<!-- CHECKOUT MODAL -->
 <div id="checkoutModal" class="modal-overlay hidden no-print">
   <div class="modal-box">
     <button id="closeCheckoutModal" class="absolute left-4 top-4 text-gray-400 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
@@ -226,15 +217,11 @@
       <div class="mb-3"><label class="block text-sm font-medium">رقم الهاتف</label><input type="tel" id="deliveryPhone" class="w-full border rounded-xl px-4 py-2" required placeholder="079XXXXXXXX"></div>
       <div class="mb-3"><label class="block text-sm font-medium">العنوان</label><input type="text" id="deliveryAddress" class="w-full border rounded-xl px-4 py-2" required placeholder="العنوان بالتفصيل"></div>
       <div class="mb-3"><label class="block text-sm font-medium">المنطقة</label><input type="text" id="deliveryRegion" class="w-full border rounded-xl px-4 py-2" required placeholder="مثال: عمان - تلاع العلي"></div>
-      
-      <!-- رسالة التحويل بدل الصورة -->
       <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 mb-1">💳 رسالة التحويل</label>
         <textarea id="transferMessage" rows="3" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" placeholder="الصق هنا رسالة التحويل البنكي أو رقم الحوالة..." required></textarea>
         <p class="text-xs text-gray-400 mt-1">⚠️ يرجى كتابة تفاصيل التحويل (البنك، المبلغ، رقم الحوالة)</p>
       </div>
-
-      <!-- زر واتساب للتواصل -->
       <div class="mb-4 p-3 bg-green-50 rounded-xl border border-green-200 text-center">
         <p class="text-sm text-gray-700 mb-2">📱 للتواصل المباشر وتأكيد الطلب:</p>
         <a href="https://wa.me/962771934703" target="_blank" class="btn-whatsapp">
@@ -243,7 +230,6 @@
         <p class="text-xs text-gray-400 mt-2">رقم واتساب: 0771934703</p>
         <p class="text-xs text-gray-500 mt-1">📌 سيتم إرسال رقم الحساب البنكي عبر واتساب لتأكيد الحجز</p>
       </div>
-
       <button type="submit" id="submitOrderBtn" class="w-full btn-success py-2.5 text-base">
         <i class="fas fa-paper-plane ml-2"></i> إرسال الطلب
       </button>
@@ -251,541 +237,39 @@
   </div>
 </div>
 
-<script type="module">
-  // ==========================================
-  // FIREBASE IMPORTS & CONFIG
-  // ==========================================
-  import { initializeApp } from "firebase/app";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updatePassword, updateProfile, onAuthStateChanged, signOut } from "firebase/auth";
-  import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, serverTimestamp, orderBy, query } from "firebase/firestore";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyC_5CP_XIeTqEaqCaxQyDmr_uTM8l9ZUCw",
-    authDomain: "qusai-mobile.firebaseapp.com",
-    projectId: "qusai-mobile",
-    storageBucket: "qusai-mobile.firebasestorage.app",
-    messagingSenderId: "317833751854",
-    appId: "1:317833751854:web:c139f4c823cd13d4931ebf",
-    measurementId: "G-81317PB56J"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const googleProvider = new GoogleAuthProvider();
-
-  // ==========================================
-  // PRODUCT DATA
-  // ==========================================
-  const wiwuProducts = [
-    { id: 'w1', name: 'WiWU TWS Earbuds', price: 29, img: 'https://placehold.co/300x300/eee/bbb?text=WiWU+TWS' },
-    { id: 'w2', name: 'WiWU Fast Charger 65W', price: 18, img: 'https://placehold.co/300x300/eee/bbb?text=WiWU+Charger' },
-    { id: 'w3', name: 'WiWU Silicone Case', price: 12, img: 'https://placehold.co/300x300/eee/bbb?text=WiWU+Case' },
-    { id: 'w4', name: 'WiWU USB-C Cable 2M', price: 9, img: 'https://placehold.co/300x300/eee/bbb?text=WiWU+Cable' },
-    { id: 'w5', name: 'WiWU Car Holder', price: 22, img: 'https://placehold.co/300x300/eee/bbb?text=WiWU+Holder' },
-    { id: 'w6', name: 'WiWU Wireless Earbuds', price: 35, img: 'https://placehold.co/300x300/eee/bbb?text=WiWU+Earbuds' },
-    { id: 'w7', name: 'WiWU Power Bank 10000mAh', price: 27, img: 'https://placehold.co/300x300/eee/bbb?text=WiWU+Power' },
-    { id: 'w8', name: 'WiWU Wide Lens', price: 16, img: 'https://placehold.co/300x300/eee/bbb?text=WiWU+Lens' },
-  ];
-
-  const honorPhones = [
-    { id: 'h1', name: 'HONOR Magic V5 512GB', price: 1301, brand: 'HONOR' },
-    { id: 'h2', name: 'HONOR Magic 8 Pro 512GB', price: 801, brand: 'HONOR' },
-    { id: 'h3', name: 'HONOR Magic 7 Pro 512GB', price: 751, brand: 'HONOR' },
-    { id: 'h4', name: 'HONOR 400 PRO 512GB', price: 461, brand: 'HONOR' },
-    { id: 'h5', name: 'HONOR 400 12-512GB', price: 301, brand: 'HONOR' },
-    { id: 'h6', name: 'HONOR 400 12-256GB', price: 271, brand: 'HONOR' },
-    { id: 'h7', name: 'HONOR X9d 12-256GB', price: 281, brand: 'HONOR' },
-    { id: 'h8', name: 'HONOR X9d 8-256GB', price: 251, brand: 'HONOR' },
-    { id: 'h9', name: 'HONOR X9c 12-256GB', price: 241, brand: 'HONOR' },
-    { id: 'h10', name: 'HONOR 600 Lite 8-256GB', price: 241, brand: 'HONOR' },
-    { id: 'h11', name: 'HONOR 400 Lite 5G', price: 171, brand: 'HONOR' },
-    { id: 'h12', name: 'HONOR X8d 8-512GB', price: 201, brand: 'HONOR' },
-    { id: 'h13', name: 'HONOR X8d 8-256GB', price: 191, brand: 'HONOR' },
-    { id: 'h14', name: 'HONOR X8c 8-512GB', price: 171, brand: 'HONOR' },
-    { id: 'h15', name: 'HONOR X8c 8-256GB', price: 151, brand: 'HONOR' },
-    { id: 'h16', name: 'HONOR X7d 5G', price: 146, brand: 'HONOR' },
-    { id: 'h17', name: 'HONOR X7d 4G', price: 131, brand: 'HONOR' },
-    { id: 'h18', name: 'HONOR X6c 6-256GB', price: 97, brand: 'HONOR' },
-    { id: 'h19', name: 'HONOR X6c 6-128GB', price: 87, brand: 'HONOR' },
-  ];
-
-  const samsungPhones = [
-    { id: 's1', name: 'Samsung A07 4-64GB', price: 72, brand: 'SAMSUNG' },
-    { id: 's2', name: 'Samsung A07 4-128GB', price: 82, brand: 'SAMSUNG' },
-    { id: 's3', name: 'Samsung A07 6-128GB', price: 92, brand: 'SAMSUNG' },
-    { id: 's4', name: 'Samsung A16 4-128GB', price: 101, brand: 'SAMSUNG' },
-    { id: 's5', name: 'Samsung A16 6-128GB', price: 122, brand: 'SAMSUNG' },
-    { id: 's6', name: 'Samsung A16 8-256GB', price: 147, brand: 'SAMSUNG' },
-    { id: 's7', name: 'Samsung A17 4-128GB', price: 117, brand: 'SAMSUNG' },
-    { id: 's8', name: 'Samsung A17 6-128GB', price: 142, brand: 'SAMSUNG' },
-    { id: 's9', name: 'Samsung A17 8-256GB', price: 182, brand: 'SAMSUNG' },
-    { id: 's10', name: 'Samsung A26 6-128GB', price: 157, brand: 'SAMSUNG' },
-    { id: 's11', name: 'Samsung A26 8-256GB', price: 201, brand: 'SAMSUNG' },
-    { id: 's12', name: 'Samsung A36 8-128GB', price: 222, brand: 'SAMSUNG' },
-    { id: 's13', name: 'Samsung A36 8-256GB', price: 272, brand: 'SAMSUNG' },
-    { id: 's14', name: 'Samsung A37 8-128GB', price: 262, brand: 'SAMSUNG' },
-    { id: 's15', name: 'Samsung A37 8-256GB', price: 302, brand: 'SAMSUNG' },
-    { id: 's16', name: 'Samsung A37 12-256GB', price: 327, brand: 'SAMSUNG' },
-    { id: 's17', name: 'Samsung A56 8-128GB', price: 272, brand: 'SAMSUNG' },
-    { id: 's18', name: 'Samsung A56 8-256GB', price: 302, brand: 'SAMSUNG' },
-    { id: 's19', name: 'Samsung A56 12-256GB', price: 342, brand: 'SAMSUNG' },
-    { id: 's20', name: 'Samsung A57 8-256GB', price: 342, brand: 'SAMSUNG' },
-    { id: 's21', name: 'Samsung A57 12-256GB', price: 377, brand: 'SAMSUNG' },
-    { id: 's22', name: 'Samsung A57 12-512GB', price: 452, brand: 'SAMSUNG' },
-    { id: 's23', name: 'Samsung S25 ULTRA 12-256GB', price: 762, brand: 'SAMSUNG' },
-    { id: 's24', name: 'Samsung S26 ULTRA 12-256GB', price: 971, brand: 'SAMSUNG' },
-    { id: 's25', name: 'Samsung S26 ULTRA 16-1024GB', price: 1452, brand: 'SAMSUNG' },
-  ];
-
-  // ==========================================
-  // STATE
-  // ==========================================
-  let cart = [];
-  let currentCategory = 'wiwu';
-  let currentUser = null;
-  let lastInvoice = null;
-  let ordersListener = null;
-
-  // ==========================================
-  // DOM REFS
-  // ==========================================
-  const productGrid = document.getElementById('productGrid');
-  const cartCount = document.getElementById('cartCount');
-  const cartTotal = document.getElementById('cartTotal');
-  const cartItems = document.getElementById('cartItems');
-  const authToggleBtn = document.getElementById('authToggleBtn');
-  const authModal = document.getElementById('authModal');
-  const closeAuthModal = document.getElementById('closeAuthModal');
-  const loginForm = document.getElementById('loginForm');
-  const registerForm = document.getElementById('registerForm');
-  const showRegisterBtn = document.getElementById('showRegisterBtn');
-  const showLoginBtn = document.getElementById('showLoginBtn');
-  const registerContainer = document.getElementById('registerFormContainer');
-  const profileSection = document.getElementById('profileSection');
-  const profileName = document.getElementById('profileName');
-  const profileEmail = document.getElementById('profileEmail');
-  const profileImage = document.getElementById('profileImage');
-  const ordersList = document.getElementById('ordersList');
-  const orderHistoryList = document.getElementById('orderHistoryList');
-  const orderHistoryArea = document.getElementById('orderHistoryArea');
-  const orderHistoryBtn = document.getElementById('orderHistoryBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const changePicBtn = document.getElementById('changePicBtn');
-  const editPasswordBtn = document.getElementById('editPasswordBtn');
-  const passwordEditArea = document.getElementById('passwordEditArea');
-  const newPasswordInput = document.getElementById('newPasswordInput');
-  const savePasswordBtn = document.getElementById('savePasswordBtn');
-  const cartBtn = document.getElementById('cartBtn');
-  const cartModal = document.getElementById('cartModal');
-  const closeCartModal = document.getElementById('closeCartModal');
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  const checkoutModal = document.getElementById('checkoutModal');
-  const closeCheckoutModal = document.getElementById('closeCheckoutModal');
-  const checkoutForm = document.getElementById('checkoutForm');
-  const submitOrderBtn = document.getElementById('submitOrderBtn');
-  const adminPanel = document.getElementById('adminPanel');
-  const adminOrdersBody = document.getElementById('adminOrdersBody');
-  const adminOrderCount = document.getElementById('adminOrderCount');
-  const closePopup = document.getElementById('closePopupBtn');
-  const popup = document.getElementById('popupNotice');
-  const langToggle = document.getElementById('langToggle');
-  const langLabel = document.getElementById('langLabel');
-  const themeToggle = document.getElementById('themeToggle');
-  const primaryColorPicker = document.getElementById('primaryColorPicker');
-  const printInvoiceBtn = document.getElementById('printInvoiceBtn');
-  const googleSignInBtn = document.getElementById('googleSignInBtn');
-  const catTabs = document.querySelectorAll('.cat-tab');
-
-  // ==========================================
-  // AUTH STATE
-  // ==========================================
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      currentUser = user;
-      updateAuthUI(user);
-      if (user.email === 'admin@qusai.com') {
-        adminPanel.classList.remove('hidden');
-        loadAdminOrders();
-      } else {
-        adminPanel.classList.add('hidden');
-        if (ordersListener) { ordersListener(); ordersListener = null; }
-      }
-    } else {
-      currentUser = null;
-      updateAuthUI(null);
-      adminPanel.classList.add('hidden');
-      if (ordersListener) { ordersListener(); ordersListener = null; }
-    }
-  });
-
-  // ==========================================
-  // AUTH UI
-  // ==========================================
-  function updateAuthUI(user) {
-    if (user) {
-      authToggleBtn.innerHTML = `<i class="fas fa-user-circle ml-1"></i> ${user.displayName || 'مستخدم'}`;
-      profileName.innerText = user.displayName || 'مستخدم';
-      profileEmail.innerText = user.email;
-      profileImage.src = user.photoURL || 'https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=80';
-      document.querySelector('#authModal form#loginForm').classList.add('hidden');
-      document.querySelector('#authModal #registerFormContainer').classList.add('hidden');
-      profileSection.classList.remove('hidden');
-      document.querySelector('#authModal .text-center .text-sm.text-gray-500').style.display = 'none';
-      loadUserOrders(user.uid);
-    } else {
-      authToggleBtn.innerHTML = `<i class="fas fa-user-circle ml-1"></i> دخول`;
-      profileSection.classList.add('hidden');
-      document.querySelector('#authModal form#loginForm').classList.remove('hidden');
-      document.querySelector('#authModal #registerFormContainer').classList.add('hidden');
-      document.querySelector('#authModal .text-center .text-sm.text-gray-500').style.display = 'block';
-    }
-  }
-
-  async function loadUserOrders(uid) {
-    try {
-      const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-      const snap = await getDocs(q);
-      const userOrders = snap.docs.filter(d => d.data().userId === uid).map(d => ({ id: d.id, ...d.data() }));
-      if (userOrders.length === 0) ordersList.innerHTML = '<li>لا توجد طلبات</li>';
-      else {
-        ordersList.innerHTML = userOrders.map(o => `
-          <li>📱 طلب #${o.id.slice(0,6)} - ${o.total} JOD - ${o.status || 'قيد الانتظار'}</li>
-        `).join('');
-      }
-    } catch (error) { console.error('Error loading orders:', error); }
-  }
-
-  // ==========================================
-  // ADMIN
-  // ==========================================
-  function loadAdminOrders() {
-    if (ordersListener) { ordersListener(); ordersListener = null; }
-    ordersListener = onSnapshot(query(collection(db, 'orders'), orderBy('createdAt', 'desc')), (snapshot) => {
-      adminOrdersBody.innerHTML = '';
-      let count = 0;
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        count++;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${count}</td>
-          <td>${data.userName || '—'}</td>
-          <td>${data.phone || '—'}</td>
-          <td>${data.address || '—'}</td>
-          <td>${data.region || '—'}</td>
-          <td>${data.items ? data.items.map(i => i.name).join(', ') : '—'}</td>
-          <td>${data.total || 0} JOD</td>
-          <td class="max-w-[150px] text-xs">${data.transferMessage || 'لا توجد رسالة'}</td>
-          <td><span class="order-badge ${data.status === 'مقبول' ? 'bg-green-100 text-green-800' : data.status === 'مرفوض' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}">${data.status || 'قيد الانتظار'}</span></td>
-          <td>
-            <button class="admin-accept bg-green-500 text-white px-2 py-1 rounded text-xs" data-id="${doc.id}">قبول</button>
-            <button class="admin-reject bg-red-500 text-white px-2 py-1 rounded text-xs" data-id="${doc.id}">رفض</button>
-          </td>
-        `;
-        adminOrdersBody.appendChild(tr);
-      });
-      adminOrderCount.textContent = `${count} orders`;
-      if (count === 0) adminOrdersBody.innerHTML = '<tr><td colspan="10" class="text-center text-gray-400 py-4">لا توجد طلبات</td></tr>';
-      
-      document.querySelectorAll('.admin-accept').forEach(b => b.addEventListener('click', async function() {
-        try { await updateDoc(doc(db, 'orders', this.dataset.id), { status: 'مقبول' }); alert('✅ تم قبول الطلب'); } catch(e) { alert('❌ خطأ'); }
-      }));
-      document.querySelectorAll('.admin-reject').forEach(b => b.addEventListener('click', async function() {
-        try { await updateDoc(doc(db, 'orders', this.dataset.id), { status: 'مرفوض' }); alert('❌ تم رفض الطلب'); } catch(e) { alert('❌ خطأ'); }
-      }));
-    });
-  }
-
-  // ==========================================
-  // CART
-  // ==========================================
-  function addToCart(id, name, price) {
-    const existing = cart.find(item => item.id === id);
-    if (existing) existing.qty += 1;
-    else cart.push({ id, name, price, qty: 1 });
-    updateCartUI();
-  }
-
-  function updateCartUI() {
-    const totalItems = cart.reduce((acc, i) => acc + i.qty, 0);
-    cartCount.innerText = totalItems;
-    const totalPrice = cart.reduce((acc, i) => acc + i.price * i.qty, 0);
-    cartTotal.innerText = totalPrice.toFixed(2) + ' JOD';
-    if (cart.length === 0) cartItems.innerHTML = '<p class="text-gray-400">السلة فارغة</p>';
-    else {
-      cartItems.innerHTML = cart.map(item => `
-        <div class="flex justify-between items-center border-b py-1">
-          <span>${item.name} <span class="text-xs text-gray-400">x${item.qty}</span></span>
-          <span>${(item.price * item.qty).toFixed(2)} JOD</span>
-        </div>
-      `).join('');
-    }
-  }
-
-  // ==========================================
-  // RENDER PRODUCTS
-  // ==========================================
-  function renderProducts() {
-    let products = [];
-    if (currentCategory === 'wiwu') products = wiwuProducts;
-    else if (currentCategory === 'honor') products = honorPhones;
-    else if (currentCategory === 'samsung') products = samsungPhones;
-
-    productGrid.innerHTML = products.map(p => `
-      <div class="product-card text-center">
-        <img src="${p.img || 'https://placehold.co/300x300/eef2ff/2563eb?text='+(p.brand||'')}" alt="${p.name}" class="w-full h-32 object-contain rounded-xl mb-2 bg-gray-50">
-        <h4 class="font-semibold text-sm">${p.name}</h4>
-        <p class="text-blue-700 font-bold mt-1">${p.price} JOD</p>
-        <button class="btn-primary text-xs mt-2 w-full py-1.5 add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}"><i class="fas fa-cart-plus ml-1"></i> Add to Cart</button>
+<!-- ===== NEW: QUICK ORDER MODAL (طلب منتج / التأكد من المنتج) ===== -->
+<div id="quickOrderModal" class="modal-overlay hidden no-print">
+  <div class="modal-box">
+    <button id="closeQuickOrderModal" class="absolute left-4 top-4 text-gray-400 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
+    <h3 class="text-xl font-bold mb-4">📦 طلب منتج / التأكد من المنتج</h3>
+    <form id="quickOrderForm">
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">اسم المنتج المراد طلبه أو التأكد منه</label>
+        <input type="text" id="quickProductName" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" placeholder="مثال: HONOR Magic V5" required>
       </div>
-    `).join('');
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
+        <input type="tel" id="quickPhone" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" placeholder="079XXXXXXXX" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">طريقة الاستلام</label>
+        <select id="quickPickup" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" required>
+          <option value="استلام من المحل">استلام من المحل</option>
+          <option value="شركة توصيل">شركة توصيل</option>
+        </select>
+      </div>
+      <button type="submit" class="w-full btn-success py-2.5 text-base">
+        <i class="fab fa-whatsapp ml-2"></i> إرسال عبر واتساب
+      </button>
+      <p class="text-xs text-gray-400 mt-3 text-center">سيتم تحويلك إلى واتساب لتأكيد الطلب</p>
+    </form>
+  </div>
+</div>
 
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const id = this.dataset.id, name = this.dataset.name, price = parseFloat(this.dataset.price);
-        addToCart(id, name, price);
-      });
-    });
-  }
+<script>
+  (function() {
+    "use strict";
 
-  // ==========================================
-  // AUTH EVENTS
-  // ==========================================
+    // ==========================================
+    // PRODUCT DATA
   
-  // Google Sign-in (REAL Firebase)
-  googleSignInBtn.addEventListener('click', async function() {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      alert('✅ تم تسجيل الدخول بجوجل بنجاح');
-      authModal.classList.add('hidden');
-    } catch (error) {
-      if (error.code === 'auth/popup-closed-by-user') {
-        alert('⚠️ تم إغلاق نافذة تسجيل الدخول');
-      } else {
-        alert('❌ خطأ في تسجيل الدخول بجوجل: ' + error.message);
-      }
-    }
-  });
-
-  // Email/Password Login
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value.trim();
-    const pass = document.getElementById('loginPassword').value.trim();
-    if (!email || !pass) { alert('⚠️ يرجى ملء جميع الحقول'); return; }
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-      authModal.classList.add('hidden');
-      alert('✅ تم تسجيل الدخول بنجاح');
-    } catch(err) {
-      alert('❌ خطأ: ' + err.message);
-    }
-  });
-
-  // Register
-  registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('regName').value.trim() || 'مستخدم';
-    const email = document.getElementById('regEmail').value.trim();
-    const pass = document.getElementById('regPassword').value.trim();
-    if (!email || !pass) { alert('⚠️ يرجى ملء جميع الحقول'); return; }
-    try {
-      const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      await updateProfile(cred.user, { displayName: name });
-      authModal.classList.add('hidden');
-      alert('✅ تم إنشاء الحساب بنجاح');
-    } catch(err) {
-      alert('❌ خطأ: ' + err.message);
-    }
-  });
-
-  // Logout
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth);
-    authModal.classList.add('hidden');
-    alert('✅ تم تسجيل الخروج');
-  });
-
-  // Change profile picture
-  changePicBtn.addEventListener('click', async () => {
-    const url = prompt('أدخل رابط الصورة الجديدة:');
-    if (url && currentUser) {
-      try {
-        await updateProfile(currentUser, { photoURL: url });
-        profileImage.src = url;
-        alert('✅ تم تحديث الصورة');
-      } catch(e) { alert('❌ فشل التحديث'); }
-    }
-  });
-
-  // Edit password
-  editPasswordBtn.addEventListener('click', () => passwordEditArea.classList.toggle('hidden'));
-  savePasswordBtn.addEventListener('click', async () => {
-    const newPass = newPasswordInput.value.trim();
-    if (newPass && currentUser) {
-      try {
-        await updatePassword(currentUser, newPass);
-        alert('✅ تم تحديث كلمة السر');
-        passwordEditArea.classList.add('hidden');
-        newPasswordInput.value = '';
-      } catch(e) { alert('❌ خطأ: ' + e.message); }
-    } else alert('⚠️ يرجى إدخال كلمة سر جديدة');
-  });
-
-  // Order history
-  orderHistoryBtn.addEventListener('click', function() {
-    orderHistoryArea.classList.toggle('hidden');
-    if (!orderHistoryArea.classList.contains('hidden') && currentUser) {
-      loadUserOrders(currentUser.uid);
-    }
-  });
-
-  // ==========================================
-  // CHECKOUT
-  // ==========================================
-  checkoutBtn.addEventListener('click', () => {
-    if (!currentUser) { alert('⚠️ يرجى تسجيل الدخول أولاً'); authModal.classList.remove('hidden'); return; }
-    if (cart.length === 0) { alert('⚠️ السلة فارغة'); return; }
-    checkoutModal.classList.remove('hidden');
-  });
-
-  closeCheckoutModal.addEventListener('click', () => checkoutModal.classList.add('hidden'));
-
-  checkoutForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!currentUser) { alert('⚠️ يرجى تسجيل الدخول'); return; }
-    
-    const name = document.getElementById('deliveryName').value.trim();
-    const phone = document.getElementById('deliveryPhone').value.trim();
-    const address = document.getElementById('deliveryAddress').value.trim();
-    const region = document.getElementById('deliveryRegion').value.trim();
-    const transferMessage = document.getElementById('transferMessage').value.trim();
-    
-    if (!name || !phone || !address || !region) { alert('⚠️ يرجى ملء جميع الحقول'); return; }
-    if (!transferMessage) { alert('⚠️ يرجى كتابة رسالة التحويل'); return; }
-
-    submitOrderBtn.disabled = true;
-    submitOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin ml-2"></i> جاري الإرسال...';
-
-    try {
-      const total = cart.reduce((acc, i) => acc + i.price * i.qty, 0);
-      const orderData = {
-        userId: currentUser.uid,
-        userName: name,
-        phone: phone,
-        address: address,
-        region: region,
-        items: cart,
-        total: total,
-        transferMessage: transferMessage,
-        status: 'قيد الانتظار',
-        createdAt: serverTimestamp()
-      };
-      
-      await addDoc(collection(db, 'orders'), orderData);
-      
-      cart = [];
-      updateCartUI();
-      checkoutModal.classList.add('hidden');
-      checkoutForm.reset();
-      
-      alert('✅ تم إرسال الطلب بنجاح! سنتواصل معك على واتساب لتأكيد الطلب.');
-      loadUserOrders(currentUser.uid);
-      
-    } catch(err) {
-      alert('❌ فشل إرسال الطلب: ' + err.message);
-    } finally {
-      submitOrderBtn.disabled = false;
-      submitOrderBtn.innerHTML = '<i class="fas fa-paper-plane ml-2"></i> إرسال الطلب';
-    }
-  });
-
-  // ==========================================
-  // UTILITIES
-  // ==========================================
-  
-  // Print invoice
-  printInvoiceBtn.addEventListener('click', function() {
-    if (!currentUser) { alert('⚠️ يرجى تسجيل الدخول أولاً'); return; }
-    window.print();
-  });
-
-  // Theme toggle
-  let currentTheme = 'light';
-  themeToggle.addEventListener('click', function() {
-    const body = document.body;
-    body.classList.remove('dark', 'tech');
-    if (currentTheme === 'light') { body.classList.add('dark'); currentTheme = 'dark'; }
-    else if (currentTheme === 'dark') { body.classList.add('tech'); currentTheme = 'tech'; }
-    else { currentTheme = 'light'; }
-  });
-
-  // Language toggle
-  let currentLang = 'ar';
-  langToggle.addEventListener('click', function() {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
-    langLabel.innerText = currentLang.toUpperCase();
-    document.querySelector('.brand-text').innerText = currentLang === 'ar' ? 'قصي موبايل' : 'Qusai Mobile';
-  });
-
-  // Color picker
-  primaryColorPicker.addEventListener('input', function() {
-    const color = this.value;
-    document.querySelectorAll('.btn-primary, .brand-badge, .section-title').forEach(el => {
-      if (el.classList.contains('btn-primary')) el.style.background = color;
-      else if (el.classList.contains('brand-badge')) el.style.background = color;
-      else if (el.classList.contains('section-title')) el.style.borderRightColor = color;
-    });
-    document.querySelectorAll('.text-blue-600, .text-blue-700').forEach(el => {
-      el.style.color = color;
-    });
-  });
-
-  // ==========================================
-  // MODAL TOGGLES
-  // ==========================================
-  authToggleBtn.addEventListener('click', () => authModal.classList.toggle('hidden'));
-  closeAuthModal.addEventListener('click', () => authModal.classList.add('hidden'));
-  showRegisterBtn.addEventListener('click', () => {
-    document.querySelector('#authModal form#loginForm').classList.add('hidden');
-    registerContainer.classList.remove('hidden');
-  });
-  showLoginBtn.addEventListener('click', () => {
-    registerContainer.classList.add('hidden');
-    document.querySelector('#authModal form#loginForm').classList.remove('hidden');
-  });
-
-  cartBtn.addEventListener('click', () => { cartModal.classList.remove('hidden'); updateCartUI(); });
-  closeCartModal.addEventListener('click', () => cartModal.classList.add('hidden'));
-
-  document.querySelectorAll('.modal-overlay').forEach(el => {
-    el.addEventListener('click', (e) => { if (e.target === el) el.classList.add('hidden'); });
-  });
-
-  closePopup.addEventListener('click', () => popup.style.display = 'none');
-  setTimeout(() => popup.style.display = 'block', 600);
-
-  // Category tabs
-  catTabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-      catTabs.forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-      currentCategory = this.dataset.cat;
-      renderProducts();
-    });
-  });
-
-  // ==========================================
-  // INIT
-  // ==========================================
-  renderProducts();
-  updateCartUI();
-
-  console.log('✅ موقع قصي موبايل جاهز!');
-  console.log('📝 تسجيل الدخول بجوجل شغال (Firebase)');
-  console.log('📱 للتواصل: 0771934703 على واتساب');
-</script>
-</body>
-</html>
