@@ -1,275 +1,106 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>قصي موبايل | Qusai Mobile</title>
-  <!-- Tailwind via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f8fafc; transition: background 0.3s, color 0.3s; }
-    .popup-notice {
-      position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; max-width: 380px;
-      background: #1e293b; color: #f1f5f9; padding: 1.25rem 1.8rem;
-      border-radius: 2rem 2rem 2rem 0.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      border-right: 6px solid #fbbf24; font-size: 0.95rem; line-height: 1.6;
-      transform: translateX(120%); animation: slideIn 0.7s ease forwards;
-    }
-    @keyframes slideIn { 0% { transform: translateX(120%); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
-    .popup-notice i { color: #fbbf24; margin-left: 8px; }
-    .close-popup { position: absolute; left: 12px; top: 12px; background: transparent; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; }
-    .close-popup:hover { color: #f1f5f9; }
-    .product-card { background: white; border-radius: 1.5rem; padding: 1rem 0.75rem 1.25rem; box-shadow: 0 4px 16px rgba(0,0,0,0.02); border: 1px solid #f0f2f5; transition: all 0.2s ease; }
-    .product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 28px -8px rgba(0,0,0,0.06); border-color: #3b82f6; }
-    .section-title { font-weight: 700; font-size: 1.8rem; border-right: 6px solid #3b82f6; padding-right: 1rem; margin-bottom: 2rem; color: #0f172a; }
-    .brand-badge { background: #2563eb; color: white; padding: 0.2rem 1rem; border-radius: 30px; font-size: 0.7rem; }
-    .btn-primary { background: #2563eb; color: white; padding: 0.5rem 1.25rem; border-radius: 40px; font-weight: 500; transition: 0.2s; border: none; cursor: pointer; font-size: 0.9rem; box-shadow: 0 4px 8px rgba(37,99,235,0.2); }
-    .btn-primary:hover { background: #1d4ed8; transform: scale(0.97); }
-    .btn-success { background: #22c55e; color: white; padding: 0.5rem 1.25rem; border-radius: 40px; font-weight: 500; transition: 0.2s; border: none; cursor: pointer; }
-    .btn-success:hover { background: #16a34a; transform: scale(0.97); }
-    .btn-whatsapp { background: #25D366; color: white; padding: 0.5rem 1.25rem; border-radius: 40px; font-weight: 500; transition: 0.2s; border: none; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; }
-    .btn-whatsapp:hover { background: #1ebe5c; transform: scale(0.97); }
-    .btn-outline { background: transparent; border: 1px solid #cbd5e1; padding: 0.4rem 1.2rem; border-radius: 40px; font-weight: 500; transition: 0.2s; cursor: pointer; }
-    .btn-outline:hover { background: #f1f5f9; border-color: #94a3b8; }
-    .btn-danger { background: #ef4444; color: white; padding: 0.4rem 1.2rem; border-radius: 40px; font-weight: 500; transition: 0.2s; border: none; cursor: pointer; }
-    .btn-danger:hover { background: #dc2626; transform: scale(0.97); }
-    .modal-overlay { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); position: fixed; inset: 0; z-index: 9998; display: flex; align-items: center; justify-content: center; }
-    .modal-overlay.hidden { display: none; }
-    .modal-box { background: white; border-radius: 2rem; padding: 2rem; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; position: relative; margin: 1rem; }
-    .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; }
-    .cart-badge { background: #ef4444; color: white; border-radius: 30px; padding: 0.1rem 0.6rem; font-size: 0.7rem; margin-left: 4px; }
-    .admin-table td, .admin-table th { padding: 0.75rem 0.5rem; border-bottom: 1px solid #e2e8f0; }
-    .order-badge { display: inline-block; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
-    .cat-tabs { display: flex; gap: 1.5rem; padding: 0.5rem 0; overflow-x: auto; border-bottom: 1px solid #e2e8f0; margin-bottom: 1.5rem; }
-    .cat-tab { background: none; border: none; padding: 0.5rem 0; font-size: 0.95rem; font-weight: 600; color: #64748b; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; white-space: nowrap; }
-    .cat-tab:hover { color: #1e293b; }
-    .cat-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
-    .util-menu { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-    .util-btn { background: rgba(255,255,255,0.08); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1); padding: 0.3rem 0.7rem; border-radius: 30px; font-size: 0.8rem; cursor: pointer; transition: 0.2s; color: inherit; display: inline-flex; align-items: center; gap: 4px; }
-    .util-btn:hover { background: rgba(255,255,255,0.15); }
-    .footer-credit { text-align: center; padding: 1.5rem 0; font-size: 0.9rem; border-top: 1px solid #e2e8f0; margin-top: 2rem; }
-    .print-header { display: none; }
-    @media print { .no-print { display: none !important; } .print-header { display: block !important; text-align: center; font-size: 1.2rem; font-weight: bold; padding: 1rem 0; border-bottom: 2px solid #000; margin-bottom: 1rem; } body { background: white !important; color: black !important; } }
-    /* Dark & Tech modes */
-    body.dark { background: #0f172a; color: #e2e8f0; }
-    body.dark .product-card { background: #1e293b; border-color: #334155; }
-    body.dark .section-title { color: #f1f5f9; border-right-color: #3b82f6; }
-    body.dark .modal-box { background: #1e293b; }
-    body.dark .btn-outline { border-color: #475569; color: #e2e8f0; }
-    body.dark .btn-outline:hover { background: #334155; }
-    body.tech { background: #0a0a0f; color: #00ffc8; }
-    body.tech .product-card { background: #111118; border-color: #00ffc8; box-shadow: 0 0 20px rgba(0,255,200,0.05); }
-    body.tech .product-card:hover { box-shadow: 0 0 40px rgba(0,255,200,0.15); }
-    body.tech .section-title { color: #00ffc8; border-right-color: #00ffc8; }
-    body.tech .btn-primary { background: #00ffc8; color: #0a0a0f; }
-    body.tech .btn-primary:hover { background: #00cc9f; }
-    body.tech .modal-box { background: #111118; border: 1px solid #00ffc8; }
-    body.tech .btn-outline { border-color: #00ffc8; color: #00ffc8; }
-    body.tech .btn-outline:hover { background: #1a1a2e; }
-    body.tech .util-btn { border-color: #00ffc8; color: #00ffc8; background: transparent; }
-    body.tech .footer-credit { border-top-color: #00ffc8; color: #00ffc8; }
-    body.tech .cat-tab { color: #00ffc8; }
-    body.tech .cat-tab.active { color: #00ffc8; border-bottom-color: #00ffc8; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أبطال الرابع والخامس</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- POPUP NOTICE -->
-<div id="popupNotice" class="popup-notice no-print">
-  <button class="close-popup" id="closePopupBtn"><i class="fas fa-times"></i></button>
-  <i class="fas fa-truck"></i> ملاحظة: السعر لا يشمل التوصيل (التوصيل عن طريق شركة).
-</div>
-
-<!-- NAVBAR -->
-<nav class="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 sticky top-0 z-50 no-print">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-wrap items-center justify-between py-2 gap-2">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl font-bold text-blue-700 brand-text">قصي موبايل</span>
-        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Qusai</span>
+  <!-- الهيدر -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text">
+          <h1>أبطال الرابع والخامس</h1>
+          <span>تعلّم • العب • اربح</span>
+        </div>
       </div>
-      <div class="util-menu">
-        <button class="util-btn" id="langToggle"><i class="fas fa-globe"></i> <span id="langLabel">AR</span></button>
-        <button class="util-btn" id="themeToggle"><i class="fas fa-palette"></i></button>
-        <input type="color" id="primaryColorPicker" class="w-6 h-6 p-0 border-0 rounded-full cursor-pointer" value="#2563eb">
-        <button class="util-btn" id="printInvoiceBtn"><i class="fas fa-print"></i></button>
-        <button id="cartBtn" class="util-btn relative">
-          <i class="fas fa-shopping-cart"></i>
-          <span id="cartCount" class="cart-badge absolute -top-1 -right-1 text-xs">0</span>
-        </button>
-        <button id="authToggleBtn" class="btn-primary text-sm px-4 py-1.5"><i class="fas fa-user-circle ml-1"></i> دخول</button>
-      </div>
+      <nav class="nav">
+        <a href="#" class="active">الرئيسية</a>
+        <a href="#">الأسئلة</a>
+        <a href="#">المسابقة</a>
+        <a href="#">عن الموقع</a>
+      </nav>
+      <button class="cta-btn" onclick="startGame()">يلا نبدأ</button>
     </div>
-    <!-- Categories -->
-    <div class="cat-tabs no-print">
-      <button class="cat-tab active" data-cat="wiwu">WiWU Products</button>
-      <button class="cat-tab" data-cat="honor">HONOR</button>
-      <button class="cat-tab" data-cat="samsung">SAMSUNG</button>
-      <!-- NEW: Order Product / Check Product -->
-      <button class="cat-tab" id="quickOrderBtn" style="color:#2563eb; border-bottom-color:#2563eb;">طلب منتج / التأكد من المنتج</button>
-    </div>
-  </div>
-</nav>
+  </header>
 
-<!-- MAIN -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-  <div class="bg-gradient-to-l from-blue-50 to-indigo-50 rounded-3xl p-6 md:p-8 mb-8 shadow-sm border border-blue-100 no-print">
-    <h1 class="text-2xl md:text-4xl font-extrabold text-gray-800">📱 قصي موبايل – أحدث الهواتف والإكسسوارات</h1>
-    <p class="text-gray-600 mt-2 text-lg">أفضل الأسعار في الأردن مع ضمان الجودة</p>
-  </div>
+  <!-- المحتوى -->
+  <main class="main">
 
-  <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-5"></div>
+    <!-- بطاقة الترحيب + الروبوت -->
+    <section id="welcome-screen" class="screen active">
+      <div class="welcome-card">
+        <div class="welcome-text">
+          <span class="badge">مرحباً بك 👋</span>
+          <h2>جاهز نتحدى اليوم يا بطل؟</h2>
+          <p>٧ أسئلة ممتعة بين العربي والرياضيات، مع روبوت يساعدك ويشجعك خطوة بخطوة.</p>
+          <button class="primary-btn" onclick="startGame()">يلا نبدأ 🚀</button>
+        </div>
 
-  <!-- Admin Panel -->
-  <div id="adminPanel" class="hidden mt-10 bg-white rounded-3xl p-6 shadow-md border border-gray-200 no-print">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-user-shield text-blue-600"></i> Admin Dashboard</h2>
-      <span class="text-sm text-gray-500" id="adminOrderCount">0 orders</span>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="admin-table w-full text-sm">
-        <thead class="bg-gray-100"><tr><th>#</th><th>Customer</th><th>Phone</th><th>Address</th><th>Region</th><th>Items</th><th>Total</th><th>Transfer Msg</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody id="adminOrdersBody"><tr><td colspan="10" class="text-center text-gray-400 py-4">No orders yet</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="footer-credit no-print">Made Up By MRSDFOR</div>
-</main>
-
-<div class="print-header">designed by MRSDFOR</div>
-
-<!-- ===== MODALS ===== -->
-
-<!-- AUTH MODAL -->
-<div id="authModal" class="modal-overlay hidden no-print">
-  <div class="modal-box">
-    <button id="closeAuthModal" class="absolute left-4 top-4 text-gray-400 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
-    <div class="text-center mb-6">
-      <h3 class="text-2xl font-bold text-gray-800">تسجيل الدخول</h3>
-      <p class="text-sm text-gray-500">أدخل بياناتك للوصول إلى حسابك</p>
-    </div>
-    <button id="googleSignInBtn" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl font-medium mb-4 flex items-center justify-center gap-2">
-      <i class="fab fa-google"></i> تسجيل الدخول بجوجل
-    </button>
-    <div class="relative my-4"><hr><span class="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-4 text-sm text-gray-400">أو</span></div>
-    <form id="loginForm">
-      <div class="mb-4"><label class="block text-gray-700 text-sm mb-1">البريد الإلكتروني</label><input type="email" id="loginEmail" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" placeholder="example@mail.com"></div>
-      <div class="mb-4"><label class="block text-gray-700 text-sm mb-1">كلمة المرور</label><input type="password" id="loginPassword" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" placeholder="••••••••"></div>
-      <button type="submit" class="w-full btn-primary py-2.5 text-base"><i class="fas fa-sign-in-alt ml-2"></i> دخول</button>
-    </form>
-    <div class="mt-4 text-center"><span class="text-sm text-gray-500">ليس لديك حساب؟</span><button id="showRegisterBtn" class="text-blue-600 font-semibold mr-1">إنشاء حساب</button></div>
-    <div id="registerFormContainer" class="hidden mt-4 border-t pt-4">
-      <h4 class="text-lg font-bold text-gray-700 mb-2">إنشاء حساب جديد</h4>
-      <form id="registerForm">
-        <div class="mb-3"><label class="block text-sm text-gray-700">الاسم</label><input type="text" id="regName" class="w-full border border-gray-300 rounded-xl px-4 py-2" placeholder="أحمد"></div>
-        <div class="mb-3"><label class="block text-sm text-gray-700">البريد الإلكتروني</label><input type="email" id="regEmail" class="w-full border border-gray-300 rounded-xl px-4 py-2" placeholder="new@mail.com"></div>
-        <div class="mb-3"><label class="block text-sm text-gray-700">كلمة المرور</label><input type="password" id="regPassword" class="w-full border border-gray-300 rounded-xl px-4 py-2" placeholder="••••••••"></div>
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl font-medium"><i class="fas fa-user-plus ml-2"></i> إنشاء حساب</button>
-      </form>
-      <button id="showLoginBtn" class="mt-2 text-sm text-blue-600">→ العودة لتسجيل الدخول</button>
-    </div>
-    <div id="profileSection" class="hidden mt-4 border-t pt-4">
-      <div class="flex items-center gap-4 mb-3">
-        <img id="profileImage" src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=80" class="profile-img">
-        <div><h4 class="font-bold text-gray-800" id="profileName">مستخدم</h4><p class="text-sm text-gray-500" id="profileEmail">user@mail.com</p></div>
+        <!-- الروبوت -->
+        <div class="robot-wrapper">
+          <div class="speech-bubble" id="speechBubble">
+            أهلاً يا بطل! جاهز نتحدى؟ 😊
+          </div>
+          <div class="robot" id="robot">
+            <div class="robot-antenna"></div>
+            <div class="robot-head">
+              <div class="robot-face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+              </div>
+            </div>
+            <div class="robot-body">
+              <div class="robot-chest"></div>
+              <div class="mouth" id="robotMouth"></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="flex flex-wrap gap-2 mb-3">
-        <button id="changePicBtn" class="btn-outline text-sm"><i class="fas fa-camera"></i> تغيير الصورة</button>
-        <button id="editPasswordBtn" class="btn-outline text-sm"><i class="fas fa-key"></i> تعديل كلمة السر</button>
-        <button id="orderHistoryBtn" class="btn-outline text-sm"><i class="fas fa-history"></i> سجل الطلبات</button>
-      </div>
-      <div id="passwordEditArea" class="hidden mt-2 bg-gray-50 p-3 rounded-xl">
-        <input type="password" id="newPasswordInput" class="w-full border border-gray-300 rounded-xl px-3 py-1.5 text-sm" placeholder="كلمة سر جديدة">
-        <button id="savePasswordBtn" class="mt-2 btn-primary text-sm py-1 px-4">حفظ</button>
-      </div>
-      <div id="orderHistoryArea" class="hidden mt-2 bg-gray-50 p-3 rounded-xl">
-        <h5 class="font-semibold text-gray-700">📋 سجل الطلبات</h5>
-        <ul id="orderHistoryList" class="text-sm text-gray-600 list-disc list-inside"></ul>
-      </div>
-      <div class="mt-3"><h5 class="font-semibold text-gray-700">📦 طلباتي المحفوظة</h5><ul id="ordersList" class="text-sm text-gray-600 list-disc list-inside"><li>لا توجد طلبات</li></ul></div>
-      <button id="logoutBtn" class="mt-3 btn-danger text-sm"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- CART MODAL -->
-<div id="cartModal" class="modal-overlay hidden no-print">
-  <div class="modal-box">
-    <button id="closeCartModal" class="absolute left-4 top-4 text-gray-400 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
-    <h3 class="text-xl font-bold mb-4">🛒 سلة التسوق</h3>
-    <div id="cartItems" class="max-h-64 overflow-y-auto space-y-2 text-sm"></div>
-    <div class="border-t pt-3 mt-3 flex justify-between font-bold"><span>المجموع:</span><span id="cartTotal">0 JOD</span></div>
-    <button id="checkoutBtn" class="w-full mt-4 btn-primary py-2.5 text-base">إتمام الشراء</button>
-  </div>
-</div>
+    <!-- شاشة السؤال -->
+    <section id="question-screen" class="screen">
+      <div class="question-card">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text">سؤال <span id="q-number">1</span> من <span id="q-total">7</span></div>
 
-<!-- CHECKOUT MODAL -->
-<div id="checkoutModal" class="modal-overlay hidden no-print">
-  <div class="modal-box">
-    <button id="closeCheckoutModal" class="absolute left-4 top-4 text-gray-400 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
-    <h3 class="text-xl font-bold mb-4">📋 تفاصيل الطلب</h3>
-    <form id="checkoutForm">
-      <div class="mb-3"><label class="block text-sm font-medium">الاسم الكامل</label><input type="text" id="deliveryName" class="w-full border rounded-xl px-4 py-2" required placeholder="أدخل اسمك"></div>
-      <div class="mb-3"><label class="block text-sm font-medium">رقم الهاتف</label><input type="tel" id="deliveryPhone" class="w-full border rounded-xl px-4 py-2" required placeholder="079XXXXXXXX"></div>
-      <div class="mb-3"><label class="block text-sm font-medium">العنوان</label><input type="text" id="deliveryAddress" class="w-full border rounded-xl px-4 py-2" required placeholder="العنوان بالتفصيل"></div>
-      <div class="mb-3"><label class="block text-sm font-medium">المنطقة</label><input type="text" id="deliveryRegion" class="w-full border rounded-xl px-4 py-2" required placeholder="مثال: عمان - تلاع العلي"></div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">💳 رسالة التحويل</label>
-        <textarea id="transferMessage" rows="3" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" placeholder="الصق هنا رسالة التحويل البنكي أو رقم الحوالة..." required></textarea>
-        <p class="text-xs text-gray-400 mt-1">⚠️ يرجى كتابة تفاصيل التحويل (البنك، المبلغ، رقم الحوالة)</p>
-      </div>
-      <div class="mb-4 p-3 bg-green-50 rounded-xl border border-green-200 text-center">
-        <p class="text-sm text-gray-700 mb-2">📱 للتواصل المباشر وتأكيد الطلب:</p>
-        <a href="https://wa.me/962771934703" target="_blank" class="btn-whatsapp">
-          <i class="fab fa-whatsapp fa-lg"></i> تواصل معنا على واتساب
-        </a>
-        <p class="text-xs text-gray-400 mt-2">رقم واتساب: 0771934703</p>
-        <p class="text-xs text-gray-500 mt-1">📌 سيتم إرسال رقم الحساب البنكي عبر واتساب لتأكيد الحجز</p>
-      </div>
-      <button type="submit" id="submitOrderBtn" class="w-full btn-success py-2.5 text-base">
-        <i class="fas fa-paper-plane ml-2"></i> إرسال الطلب
-      </button>
-    </form>
-  </div>
-</div>
+        <h2 id="question-text">...</h2>
 
-<!-- ===== NEW: QUICK ORDER MODAL (طلب منتج / التأكد من المنتج) ===== -->
-<div id="quickOrderModal" class="modal-overlay hidden no-print">
-  <div class="modal-box">
-    <button id="closeQuickOrderModal" class="absolute left-4 top-4 text-gray-400 hover:text-gray-700 text-xl"><i class="fas fa-times"></i></button>
-    <h3 class="text-xl font-bold mb-4">📦 طلب منتج / التأكد من المنتج</h3>
-    <form id="quickOrderForm">
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">اسم المنتج المراد طلبه أو التأكد منه</label>
-        <input type="text" id="quickProductName" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" placeholder="مثال: HONOR Magic V5" required>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
-        <input type="tel" id="quickPhone" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" placeholder="079XXXXXXXX" required>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">طريقة الاستلام</label>
-        <select id="quickPickup" class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none" required>
-          <option value="استلام من المحل">استلام من المحل</option>
-          <option value="شركة توصيل">شركة توصيل</option>
-        </select>
-      </div>
-      <button type="submit" class="w-full btn-success py-2.5 text-base">
-        <i class="fab fa-whatsapp ml-2"></i> إرسال عبر واتساب
-      </button>
-      <p class="text-xs text-gray-400 mt-3 text-center">سيتم تحويلك إلى واتساب لتأكيد الطلب</p>
-    </form>
-  </div>
-</div>
+        <input type="text" id="answer-input" placeholder="اكتب جوابك هنا..." />
 
-<script>
-  (function() {
-    "use strict";
+        <div class="buttons">
+          <button class="primary-btn" onclick="checkAnswer()">تحقق ✅</button>
+          <button class="hint-btn" onclick="showHint()">ساعدني شوي 💡</button>
+        </div>
 
-    // ==========================================
-    // PRODUCT DATA
-  
+        <p id="feedback" class="feedback"></p>
+
+        <div id="help-box" class="help-box hidden">
+          <p id="hint-text"></p>
+          <button class="primary-btn" onclick="solveTogether()">شو رأيك نحله سوا؟ 🤝</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- شاشة الفوز -->
+    <section id="win-screen" class="screen">
+      <div class="win-card">
+        <div class="trophy">🏆</div>
+        <h2>برافو عليك يا بطل!</h2>
+        <p>خلصت كل الأسئلة السبعة، إنت بطل حقيقي!</p>
+        <button class="primary-btn" onclick="restart()">بدي أجرب مرة ثانية 🔄</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
